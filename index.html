@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>粒用大豆品种简评生成器</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #4CAF50;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        input[type="file"] {
+            display: block;
+            margin: 20px auto;
+            padding: 10px;
+            font-size: 16px;
+            background-color: #f1f1f1;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+            width: calc(100% - 40px);
+        }
+        .button-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .button {
+            flex: 1;
+            min-width: 120px;
+            padding: 10px 15px;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            opacity: 0.9;
+        }
+        .download-button {
+            background-color: #f44336;
+            color: #fff;
+        }
+        .copy-button {
+            background-color: #008CBA;
+            color: #fff;
+        }
+        .generate-button {
+            background-color: #4CAF50;
+            color: #fff;
+        }
+        #output {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            white-space: pre-wrap;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            max-height: 400px;
+        }
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 12px;
+            color: #777;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+    <h1>粒用大豆品种简评生成器</h1>
+    <input type="file" id="fileInput" accept=".csv">
+    <div class="button-container">
+        <button class="button generate-button" onclick="handleButtonClick(4)">生成品种简评</button>
+        <button class="button copy-button" onclick="copyContent()">复制内容</button>
+        <a href="https://www.123865.com/s/V9qA-lknGh" target="_blank" class="button download-button">下载模板</a>
+    </div>
+    <div id="output">上传文件并生成报告后，结果将在这里显示。</div>
+</div>
+
+<footer>
+    © 大豆组 粒用大豆品种简评生成器 | By Jam
+</footer>
+
+<script>
+    let csvData = [];
+    let txtContent = '';
+
+    document.getElementById('fileInput').addEventListener('change', function(event) {
+        let file = event.target.files[0];
+        if (file) {
+            Papa.parse(file, {
+                complete: function(results) {
+                    csvData = results.data;
+                    alert('CSV 文件已成功读取');
+                },
+                header: false
+            });
+        }
+    });
+
+    function handleButtonClick(buttonId) {
+        let output = document.getElementById('output');
+        if (buttonId === 4) {
+            if (csvData.length > 0) {
+                txtContent = '4、品种简评\n';
+                let sectionNumber = 1;
+
+                for (let i = 1; i < csvData.length; i++) {
+                    const row = csvData[i];
+                    txtContent += `4.${sectionNumber}.${row[0]}：${row[1]}选育，第一年参试。春/夏/秋播全生育期平均${row[2]}天，比对照${row[3]}晚熟${row[4]}天，${row[5]}花，${row[6]}毛，荚熟${row[7]}色，株型${row[8]}，${row[9]}结荚习性，落叶性${row[10]}，${row[11]}裂荚，${row[12]}倒伏。株高${row[13]}cm，底荚高度${row[14]}cm，主茎节数${row[15]}个，分枝数${row[16]}个，单株饱荚数${row[17]}个，单株粒数${row[18]}粒，单株粒重${row[19]}g，百粒重${row[20]}g，完全粒率${row[21]}%，籽粒${row[22]}，种皮${row[23]}、子叶${row[24]}，种脐${row[25]}。田间花叶病毒病病情指数${row[26]}；人工接种花叶病毒流行株系SC3和SC7鉴定，表现对SC3株系为XXX，对SC7株系为XXX。田间炭疽病病情指数为${row[27]}，人工接种炭疽病病菌鉴定，对炭疽病抗性表现为XXX。田间调查根腐病自然发病率为${row[28]}%，表现XXX。平均亩产${row[29]}kg，比对照增产${row[30]}%，增产水平${row[31]}，居参试品种第${row[32]}位，增产点率${row[33]}%；粗蛋白质含量为${row[34]}%，粗脂肪含量为${row[35]}%，蛋脂含量总和为${row[36]}%。该品种XXX。\n\n`;
+                    sectionNumber++;
+                }
+                output.innerText = txtContent;
+            } else {
+                output.innerText = '请先上传CSV文件。';
+            }
+        }
+    }
+
+    function copyContent() {
+        let output = document.getElementById('output').innerText;
+        if (output) {
+            const tempElement = document.createElement('textarea');
+            tempElement.value = output.replace(/\n/g, '\n\n');
+            document.body.appendChild(tempElement);
+            tempElement.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempElement);
+            alert('内容已复制到剪贴板');
+        } else {
+            alert('没有内容可复制');
+        }
+    }
+
+    function downloadTemplate() {
+        const link = document.createElement('a');
+        link.href = 'https://www.123865.com/s/V9qA-lknGh'; // 替换为您的模板链接
+        link.download = 'template.csv';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+</script>
+
+</body>
+</html>
